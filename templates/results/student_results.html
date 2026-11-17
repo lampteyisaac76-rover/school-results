@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}Examination Results - {{ summary.student.full_name }} - School Results Portal{% endblock %}
+
+{% block content %}
+<div style="max-width: 860px; margin: 1rem auto;">
+
+    <!-- Top Action Bar (hidden when printing) -->
+    <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
+        <a href="{% url 'parent_search' %}" class="btn btn-secondary btn-sm">
+            &larr; Search Another Student
+        </a>
+        <div style="display: flex; gap: 0.5rem;">
+            <button onclick="window.print()" class="btn btn-gold btn-sm">
+                &#128424; Print Results Slip
+            </button>
+            <a href="{% url 'home' %}" class="btn btn-outline btn-sm">
+                Portal Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Official Results Slip -->
+    <div class="results-slip">
+        <!-- Slip Header -->
+        <div class="slip-header">
+            <h2 class="slip-school-name">School Results Portal</h2>
+            <div class="slip-exam-title">Official Term Examination Results Slip</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                Academic Records &amp; Publishing System
+            </p>
+        </div>
+
+        <!-- Student Information Grid -->
+        <div class="student-meta-grid">
+            <div class="meta-item">
+                <span class="meta-label">Student Full Name</span>
+                <div class="meta-value">{{ summary.student.full_name }}</div>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Admission Number</span>
+                <div class="meta-value">{{ summary.student.admission_number }}</div>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Class</span>
+                <div class="meta-value">{{ summary.student.class_name }}</div>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Publication Status</span>
+                <div class="meta-value">
+                    {% if summary.is_complete %}
+                        <span class="badge badge-success">Official &bull; Complete</span>
+                    {% else %}
+                        <span class="badge badge-warning">Partial ({{ summary.entered_count }}/{{ summary.subjects_count }})</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Subjects & Scores Table -->
+        <div class="table-responsive" style="margin-bottom: 1.5rem;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Curriculum Subject</th>
+                        <th style="text-align: center; width: 140px;">Score (/100)</th>
+                        <th style="text-align: center; width: 120px;">Grade</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in summary.rows %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><strong>{{ row.subject.name }}</strong></td>
+                            <td style="text-align: center;">
+                                {% if row.has_score %}
+                                    <span style="font-size: 1.1rem; font-weight: 700; color: var(--navy-dark);">
+                                        {{ row.score }}
+                                    </span>
+                                {% else %}
+                                    <span style="color: var(--text-muted); font-style: italic;">
+                                        Pending
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: center;">
+                                {% if row.has_score %}
+                                    <span class="badge badge-info">{{ row.grade }}</span>
+                                {% else %}
+                                    <span style="color: var(--text-muted);">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row.has_score %}
+                                    <span>{{ row.remark }}</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Score Not Yet Entered</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary & Overall Performance or Incomplete Banner -->
+        {% if summary.is_complete %}
+            <div class="results-summary-card">
+                <div class="summary-stat">
+                    <div class="stat-label">Total Score</div>
+                    <div class="stat-value">{{ summary.total_score }} <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">/ {{ summary.max_possible_total }}</span></div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">9 Subjects Sum</div>
+                </div>
+
+                <div class="summary-stat">
+                    <div class="stat-label">Average Score</div>
+                    <div class="stat-value">{{ summary.average_score }}%</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Total &divide; 9 Subjects</div>
+                </div>
+
+                <div class="summary-stat">
+                    <div class="stat-label">Overall Performance</div>
+                    <div class="stat-value" style="font-size: 1.35rem; color: var(--gold-accent);">
+                        {{ summary.overall_performance.remark }}
+                    </div>
+                    <div class="stat-badge">
+                        <span class="badge badge-success">{{ summary.overall_performance.grade }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grading Scale Legend -->
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-muted);">
+                <strong>Grading Scale:</strong>
+                80–100%: Excellent (Grade 1) &bull;
+                70–79%: Very Good (Grade 2) &bull;
+                60–69%: Good (Grade 3) &bull;
+                50–59%: Credit (Grade 4) &bull;
+                40–49%: Pass (Grade 5) &bull;
+                Below 40%: Needs Improvement (Grade 6)
+            </div>
+        {% else %}
+            <div class="incomplete-banner">
+                <h4>&#9888; Incomplete Examination Results</h4>
+                <p>
+                    Scores have only been recorded for <strong>{{ summary.entered_count }}</strong> out of <strong>{{ summary.subjects_count }}</strong> subjects.
+                </p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+                    To ensure fairness and accuracy, overall total score, average score, and final performance remarks will be calculated only after all nine subject scores have been entered by teachers and confirmed.
+                </p>
+            </div>
+        {% endif %}
+
+        <!-- Slip Footer Notes -->
+        <div style="margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+            <div>
+                <p>Generated by School Results Management &amp; Publishing System</p>
+                <p>Document Validated for Examination Session</p>
+            </div>
+            <div style="text-align: right;">
+                <p style="border-top: 1px solid #94a3b8; padding-top: 0.25rem; width: 180px;">
+                    Authorized Signature / Stamp
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

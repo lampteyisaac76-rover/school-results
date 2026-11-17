@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}Teacher Dashboard - School Results Portal{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+    <div>
+        <h2 style="color: var(--navy-dark); font-size: 1.85rem; font-weight: 800;">
+            Welcome to the Teacher Dashboard
+        </h2>
+        <p style="color: var(--text-muted); font-size: 1rem;">
+            Use this portal to search for students and record or update their 9 examination subject scores.
+        </p>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+        <a href="{% url 'teacher_students' %}" class="btn btn-primary">
+            View Registered Students &rarr;
+        </a>
+        <a href="{% url 'teacher_logout' %}" class="btn btn-outline">
+            Logout
+        </a>
+    </div>
+</div>
+
+<!-- Metrics summary cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+    <div class="card" style="margin-bottom: 0; padding: 1.25rem; border-left: 4px solid var(--navy-primary);">
+        <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Registered Students</span>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--navy-primary); margin-top: 0.25rem;">
+            {{ total_students }}
+        </div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Enrolled by Administrator</span>
+    </div>
+
+    <div class="card" style="margin-bottom: 0; padding: 1.25rem; border-left: 4px solid var(--success);">
+        <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Fully Completed</span>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--success); margin-top: 0.25rem;">
+            {{ complete_count }}
+        </div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">All 9 subjects recorded</span>
+    </div>
+
+    <div class="card" style="margin-bottom: 0; padding: 1.25rem; border-left: 4px solid var(--warning);">
+        <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Partially Entered</span>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--warning); margin-top: 0.25rem;">
+            {{ partial_count }}
+        </div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Incomplete scores</span>
+    </div>
+
+    <div class="card" style="margin-bottom: 0; padding: 1.25rem; border-left: 4px solid var(--text-muted);">
+        <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Not Started</span>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--text-muted); margin-top: 0.25rem;">
+            {{ not_started_count }}
+        </div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">0 of 9 subjects entered</span>
+    </div>
+</div>
+
+<!-- Search for students -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Search for a Student</h3>
+        <p class="card-subtitle">Quickly look up a student by admission number, first name, or last name to enter scores</p>
+    </div>
+
+    <form method="GET" action="{% url 'teacher_dashboard' %}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+        <input 
+            type="text" 
+            name="q" 
+            value="{{ search_query }}" 
+            class="form-control" 
+            placeholder="Search by student name or admission number..." 
+            style="flex: 1; min-width: 260px;"
+            required
+        >
+        <button type="submit" class="btn btn-primary">Search Student</button>
+        {% if search_query %}
+            <a href="{% url 'teacher_dashboard' %}" class="btn btn-outline">Clear</a>
+        {% endif %}
+    </form>
+
+    {% if search_query %}
+        <div style="margin-top: 1rem;">
+            <h4 style="margin-bottom: 0.75rem; color: var(--navy-primary);">
+                Search Results for "{{ search_query }}" ({{ search_results|length }} found)
+            </h4>
+            
+            {% if search_results %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Admission Number</th>
+                                <th>Full Name</th>
+                                <th>Class</th>
+                                <th>Scores Status</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in search_results %}
+                                <tr>
+                                    <td><strong>{{ student.admission_number }}</strong></td>
+                                    <td>{{ student.full_name }}</td>
+                                    <td><span class="badge badge-info">{{ student.class_name }}</span></td>
+                                    <td>
+                                        {% if student.results_count >= total_subjects and total_subjects > 0 %}
+                                            <span class="badge badge-success">Completed ({{ student.results_count }}/{{ total_subjects }})</span>
+                                        {% elif student.results_count > 0 %}
+                                            <span class="badge badge-warning">Partial ({{ student.results_count }}/{{ total_subjects }})</span>
+                                        {% else %}
+                                            <span class="badge" style="background:#e2e8f0; color:#475569;">Not Started</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <a href="{% url 'teacher_enter_scores' student.id %}" class="btn btn-primary btn-sm">
+                                            {% if student.results_count > 0 %}Update Scores{% else %}Enter Scores{% endif %}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p style="color: var(--text-muted); padding: 1rem; background: var(--bg-main); border-radius: var(--radius-sm);">
+                    No registered student matched your query "{{ search_query }}". Please check spelling or view the full list.
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Registered Students Quick Access -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+        <div>
+            <h3 class="card-title" style="margin-bottom: 0.2rem;">Recently Registered Students</h3>
+            <p class="card-subtitle">Select any student below or click "View All Students" for the full roster</p>
+        </div>
+        <a href="{% url 'teacher_students' %}" class="btn btn-secondary btn-sm">
+            View All Students ({{ total_students }}) &rarr;
+        </a>
+    </div>
+
+    {% if recent_students %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Admission Number</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Scores Status</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in recent_students %}
+                        <tr>
+                            <td><strong>{{ student.admission_number }}</strong></td>
+                            <td>{{ student.full_name }}</td>
+                            <td><span class="badge badge-info">{{ student.class_name }}</span></td>
+                            <td>
+                                {% if student.results_count >= total_subjects and total_subjects > 0 %}
+                                    <span class="badge badge-success">Completed ({{ student.results_count }}/{{ total_subjects }})</span>
+                                {% elif student.results_count > 0 %}
+                                    <span class="badge badge-warning">Partial ({{ student.results_count }}/{{ total_subjects }})</span>
+                                {% else %}
+                                    <span class="badge" style="background:#e2e8f0; color:#475569;">Not Started</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right;">
+                                <a href="{% url 'teacher_enter_scores' student.id %}" class="btn btn-primary btn-sm">
+                                    {% if student.results_count > 0 %}Update Scores{% else %}Enter Scores{% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 2.5rem 1rem;">
+            <p style="color: var(--text-muted); font-size: 1.05rem;">
+                No students have been registered yet by the administrator.
+            </p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+                The school administrator must register students via Django Admin before examination scores can be entered.
+            </p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

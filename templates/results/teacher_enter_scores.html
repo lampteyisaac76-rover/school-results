@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Enter Scores - {{ student.full_name }} - Teacher Portal{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+    <div>
+        <h2 style="color: var(--navy-dark); font-size: 1.75rem; font-weight: 800;">
+            Enter Examination Scores
+        </h2>
+        <p style="color: var(--text-muted);">
+            Record or update scores for all nine curriculum subjects below.
+        </p>
+    </div>
+    <div>
+        <a href="{% url 'teacher_students' %}" class="btn btn-secondary btn-sm">
+            &larr; Back to Students List
+        </a>
+    </div>
+</div>
+
+<!-- Student Identity Box -->
+<div class="card" style="padding: 1.25rem 1.5rem; background: var(--soft-blue-bg); border: 1px solid var(--soft-blue-border); margin-bottom: 1.5rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+        <div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Student Name</span>
+            <div style="font-size: 1.15rem; font-weight: 700; color: var(--navy-dark);">
+                {{ student.full_name }}
+            </div>
+        </div>
+        <div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Admission Number</span>
+            <div style="font-size: 1.15rem; font-weight: 700; color: var(--navy-primary);">
+                {{ student.admission_number }}
+            </div>
+        </div>
+        <div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Class</span>
+            <div style="font-size: 1.15rem; font-weight: 700; color: var(--text-main);">
+                {{ student.class_name }}
+            </div>
+        </div>
+        <div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Total Subjects</span>
+            <div style="font-size: 1.15rem; font-weight: 700; color: var(--navy-dark);">
+                {{ total_subjects }} Subjects
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Subject Scores (0 – 100)</h3>
+        <p class="card-subtitle">
+            Enter whole numbers between 0 and 100. Existing scores will be updated automatically without creating duplicates.
+        </p>
+    </div>
+
+    <form method="POST" action="{% url 'teacher_enter_scores' student.id %}">
+        {% csrf_token %}
+
+        <div class="table-responsive score-input-table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Subject</th>
+                        <th style="width: 220px; text-align: center;">Score (0 - 100)</th>
+                        <th>Status / Validation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in subject_rows %}
+                        <tr {% if row.error %}style="background-color: var(--danger-bg);"{% endif %}>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <strong>{{ row.subject.name }}</strong>
+                            </td>
+                            <td style="text-align: center;">
+                                <input 
+                                    type="number" 
+                                    name="score_{{ row.subject.id }}" 
+                                    value="{{ row.current_value }}" 
+                                    min="0" 
+                                    max="100" 
+                                    step="1" 
+                                    placeholder="0 - 100"
+                                    class="form-control"
+                                    style="width: 120px; display: inline-block; text-align: center; font-weight: 600; font-size: 1.05rem;"
+                                >
+                            </td>
+                            <td>
+                                {% if row.error %}
+                                    <span class="form-error" style="display: block;">{{ row.error }}</span>
+                                {% elif row.current_value != '' %}
+                                    <span class="badge badge-success">Saved: {{ row.current_value }}</span>
+                                {% else %}
+                                    <span class="badge" style="background:#e2e8f0; color:#475569;">Not Entered</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem; align-items: center;">
+            <a href="{% url 'teacher_students' %}" class="btn btn-outline">
+                Cancel
+            </a>
+            <button type="submit" class="btn btn-primary btn-lg">
+                Save Examination Scores
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

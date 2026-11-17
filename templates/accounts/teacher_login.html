@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Teacher Login - School Results Portal{% endblock %}
+
+{% block content %}
+<div style="max-width: 440px; margin: 3rem auto;">
+    <div class="card" style="box-shadow: var(--shadow-md);">
+        <div class="card-header" style="text-align: center;">
+            <div class="portal-icon blue" style="margin: 0 auto 0.75rem auto; width: 48px; height: 48px; font-size: 1.5rem;">
+                &#128274;
+            </div>
+            <h2 class="card-title">Teacher Portal Login</h2>
+            <p class="card-subtitle">Please enter the shared teacher examination password</p>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-error">
+                <strong>Authentication Failed:</strong> {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'teacher_login' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Teacher Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-control" 
+                    placeholder="Enter teacher password..." 
+                    required 
+                    autofocus
+                >
+                <p class="form-help">
+                    Teachers share a single secure access password for recording examination marks.
+                </p>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                Log In to Teacher Dashboard
+            </button>
+        </form>
+
+        <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+                Are you an administrator? 
+                <a href="/admin/" target="_blank">Sign in to Django Admin &rarr;</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

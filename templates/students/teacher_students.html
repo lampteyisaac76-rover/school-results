@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Registered Students - Teacher Portal{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+    <div>
+        <h2 style="color: var(--navy-dark); font-size: 1.75rem; font-weight: 800;">
+            Registered Students
+        </h2>
+        <p style="color: var(--text-muted);">
+            Select a student to enter or update their scores for all nine curriculum subjects.
+        </p>
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+        <a href="{% url 'teacher_dashboard' %}" class="btn btn-secondary btn-sm">
+            &larr; Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom: 1.5rem;">
+    <form method="GET" action="{% url 'teacher_students' %}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+        <div style="flex: 2; min-width: 250px;">
+            <label class="form-label" for="search-input">Search Student</label>
+            <input 
+                type="text" 
+                id="search-input" 
+                name="q" 
+                value="{{ query }}" 
+                class="form-control" 
+                placeholder="Search by student name or admission number..."
+            >
+        </div>
+
+        {% if available_classes %}
+            <div style="flex: 1; min-width: 150px;">
+                <label class="form-label" for="class-select">Filter by Class</label>
+                <select id="class-select" name="class" class="form-control">
+                    <option value="">All Classes</option>
+                    {% for c in available_classes %}
+                        <option value="{{ c }}" {% if selected_class == c %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        <div style="display: flex; gap: 0.5rem;">
+            <button type="submit" class="btn btn-primary">Filter / Search</button>
+            {% if query or selected_class %}
+                <a href="{% url 'teacher_students' %}" class="btn btn-outline">Reset</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 class="card-title" style="font-size: 1.15rem;">
+            Student Records ({{ students|length }})
+        </h3>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">
+            Showing registered students from administration
+        </span>
+    </div>
+
+    {% if students %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Admission No.</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Date Registered</th>
+                        <th>Scores Status</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td><strong>{{ student.admission_number }}</strong></td>
+                            <td>{{ student.full_name }}</td>
+                            <td><span class="badge badge-info">{{ student.class_name }}</span></td>
+                            <td style="color: var(--text-muted); font-size: 0.85rem;">
+                                {{ student.date_registered|date:"M d, Y" }}
+                            </td>
+                            <td>
+                                {% if student.results_count >= total_subjects and total_subjects > 0 %}
+                                    <span class="badge badge-success">Completed ({{ student.results_count }}/{{ total_subjects }})</span>
+                                {% elif student.results_count > 0 %}
+                                    <span class="badge badge-warning">Partial ({{ student.results_count }}/{{ total_subjects }})</span>
+                                {% else %}
+                                    <span class="badge" style="background:#e2e8f0; color:#475569;">Not Started</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right;">
+                                <a href="{% url 'teacher_enter_scores' student.id %}" class="btn btn-primary btn-sm">
+                                    {% if student.results_count > 0 %}Update Scores{% else %}Enter Scores{% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 2rem 1rem;">
+            <p style="color: var(--text-muted); font-size: 1rem;">
+                {% if query or selected_class %}
+                    No students found matching your search criteria.
+                {% else %}
+                    No students have been registered yet by the administrator.
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

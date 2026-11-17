@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - School Results Management and Publishing System{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <h2 class="hero-title">Official School Results Portal</h2>
+    <p class="hero-subtitle">
+        Welcome to the central examination results portal. Parents can search and check results,
+        teachers can enter subject scores, and administrators have full oversight of records.
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{% url 'parent_search' %}" class="btn btn-gold btn-lg">Check Student Results</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'teacher_dashboard' %}" class="btn btn-primary btn-lg">Teacher Dashboard</a>
+        {% else %}
+            <a href="{% url 'teacher_login' %}" class="btn btn-primary btn-lg">Teacher Login</a>
+        {% endif %}
+    </div>
+</section>
+
+<div class="portal-grid">
+    <!-- Parent Portal Card -->
+    <div class="portal-card">
+        <div>
+            <div class="portal-card-header">
+                <div class="portal-icon gold">&#127891;</div>
+                <h3>Parents' Portal</h3>
+            </div>
+            <p>
+                Access your child's official examination scores online. No account or password required. Simply enter your child's first name to view their complete score breakdown.
+            </p>
+        </div>
+        <a href="{% url 'parent_search' %}" class="btn btn-gold" style="width: 100%;">
+            Check Results &rarr;
+        </a>
+    </div>
+
+    <!-- Teacher Portal Card -->
+    <div class="portal-card">
+        <div>
+            <div class="portal-card-header">
+                <div class="portal-icon blue">&#9998;</div>
+                <h3>Teacher Portal</h3>
+            </div>
+            <p>
+                Teachers can log in securely using the shared staff access password to look up registered students and record or update scores for all nine curriculum subjects.
+            </p>
+        </div>
+        {% if user.is_authenticated %}
+            <a href="{% url 'teacher_dashboard' %}" class="btn btn-primary" style="width: 100%;">
+                Open Dashboard &rarr;
+            </a>
+        {% else %}
+            <a href="{% url 'teacher_login' %}" class="btn btn-primary" style="width: 100%;">
+                Teacher Login &rarr;
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Admin Portal Card -->
+    <div class="portal-card">
+        <div>
+            <div class="portal-card-header">
+                <div class="portal-icon slate">&#9881;</div>
+                <h3>Administrator Area</h3>
+            </div>
+            <p>
+                Access the Django administrative dashboard to register students, configure subject offerings, manage examinations, and oversee score publications.
+            </p>
+        </div>
+        <a href="/admin/" target="_blank" class="btn btn-secondary" style="width: 100%;">
+            Admin Dashboard &rarr;
+        </a>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 2rem;">
+    <div class="card-header">
+        <h3 class="card-title">Curriculum Subjects in this Examination</h3>
+        <p class="card-subtitle">All students are assessed across nine core subjects</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; margin-top: 0.5rem;">
+        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+            1. Mathematics
+        </div>
+        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+            2. English Language
+        </div>
+        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+            3. Integrated Science
+        </div>
+        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+            4. Social Studies
+        </div>
+        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+            5. Computing
+        </div>
+        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+            6. RME
+        </div>
+        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+            7. Ghanaian Language
+        </div>
+        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+            8. Creative Arts
+        </div>
+        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+            9. Career Technology
+        </div>
+    </div>
+</div>
+{% endblock %}
