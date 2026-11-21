@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}School Results Management & Publishing System{% endblock %}</title>
+    <title>{% block title %}God Reigns Dominion International School - Results Portal{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
@@ -12,10 +13,10 @@
     <header class="site-header">
         <div class="header-container">
             <a href="{% url 'home' %}" class="school-brand">
-                <div class="brand-crest">SR</div>
+                <img src="{% static 'images/logo.png' %}" alt="God Reigns Dominion International School Logo" class="brand-logo-img">
                 <div class="brand-text">
-                    <h1>School Results Portal</h1>
-                    <span>Examination & Records</span>
+                    <h1>God Reigns Dominion Int. School</h1>
+                    <span>Knowledge is Power &bull; Est. 2001</span>
                 </div>
             </a>
             <nav class="main-nav">
@@ -50,16 +51,19 @@
 
     <footer class="site-footer">
         <div class="footer-container">
-            <div>
-                <strong>School Results Management &amp; Publishing System</strong>
-                <p style="margin-top: 0.25rem; color: #94a3b8; font-size: 0.8rem;">
-                    Official examination publishing portal for students, teachers, and parents.
-                </p>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" style="width: 46px; height: 46px; object-fit: contain; background: #ffffff; border-radius: 50%; padding: 2px; border: 2px solid var(--gold-accent);">
+                <div>
+                    <strong style="font-size: 1rem; color: #ffffff;">God Reigns Dominion International School</strong>
+                    <p style="margin-top: 0.2rem; color: #94a3b8; font-size: 0.825rem;">
+                        <em>"Knowledge is Power"</em> &bull; Established in 2001 &bull; Academic Examination Portal
+                    </p>
+                </div>
             </div>
             <div class="footer-links">
                 <a href="{% url 'home' %}">Home</a>
                 <a href="{% url 'parent_search' %}">Results Checker</a>
-                <a href="{% url 'teacher_login' %}">Teacher Login</a>
+                <a href="{% url 'teacher_login' %}">Teacher Portal</a>
                 <a href="/admin/">Admin Access</a>
             </div>
         </div>

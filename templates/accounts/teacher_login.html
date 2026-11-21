@@ -1,16 +1,18 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Teacher Login - School Results Portal{% endblock %}
+{% block title %}Teacher Portal Login - God Reigns Dominion International School{% endblock %}
 
 {% block content %}
-<div style="max-width: 440px; margin: 3rem auto;">
-    <div class="card" style="box-shadow: var(--shadow-md);">
+<div style="max-width: 460px; margin: 3rem auto;">
+    <div class="card" style="box-shadow: var(--shadow-md); border-top: 4px solid var(--navy-primary);">
         <div class="card-header" style="text-align: center;">
-            <div class="portal-icon blue" style="margin: 0 auto 0.75rem auto; width: 48px; height: 48px; font-size: 1.5rem;">
-                &#128274;
-            </div>
-            <h2 class="card-title">Teacher Portal Login</h2>
-            <p class="card-subtitle">Please enter the shared teacher examination password</p>
+            <img src="{% static 'images/logo.png' %}" alt="God Reigns Dominion International School Crest" style="width: 72px; height: 72px; object-fit: contain; margin: 0 auto 0.75rem auto; display: block; border-radius: 50%; border: 2px solid var(--gold-accent); padding: 2px; background: #ffffff;">
+            <span style="font-size: 0.8rem; font-weight: 800; color: var(--gold-accent); text-transform: uppercase; letter-spacing: 0.06em;">
+                God Reigns Dominion Int. School
+            </span>
+            <h2 class="card-title" style="margin-top: 0.25rem;">Teacher Portal Login</h2>
+            <p class="card-subtitle">Enter the shared staff access password to record marks</p>
         </div>
 
         {% if error %}
@@ -23,7 +25,7 @@
             {% csrf_token %}
             
             <div class="form-group">
-                <label for="password" class="form-label">Teacher Password</label>
+                <label for="password" class="form-label">Staff Access Password</label>
                 <input 
                     type="password" 
                     id="password" 
@@ -38,8 +40,8 @@
                 </p>
             </div>
 
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
-                Log In to Teacher Dashboard
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; font-weight: 700;">
+                Log In to Teacher Dashboard &rarr;
             </button>
         </form>
 

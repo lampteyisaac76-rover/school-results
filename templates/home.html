@@ -1,20 +1,27 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Home - School Results Management and Publishing System{% endblock %}
+{% block title %}God Reigns Dominion International School - Results Portal{% endblock %}
 
 {% block content %}
 <section class="hero-section">
-    <h2 class="hero-title">Official School Results Portal</h2>
+    <div class="hero-crest-wrapper">
+        <img src="{% static 'images/logo.png' %}" alt="God Reigns Dominion International School Crest" class="hero-logo-img">
+    </div>
+    <div>
+        <span class="school-motto-badge">Motto: Knowledge is Power &bull; Est. 2001</span>
+    </div>
+    <h2 class="hero-title">God Reigns Dominion International School</h2>
     <p class="hero-subtitle">
-        Welcome to the central examination results portal. Parents can search and check results,
-        teachers can enter subject scores, and administrators have full oversight of records.
+        Official Examination Results &amp; Publishing Portal.
+        Parents can view and download their children's examination reports, teachers can enter scores, and administrators maintain records.
     </p>
     <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
         <a href="{% url 'parent_search' %}" class="btn btn-gold btn-lg">Check Student Results</a>
         {% if user.is_authenticated %}
             <a href="{% url 'teacher_dashboard' %}" class="btn btn-primary btn-lg">Teacher Dashboard</a>
         {% else %}
-            <a href="{% url 'teacher_login' %}" class="btn btn-primary btn-lg">Teacher Login</a>
+            <a href="{% url 'teacher_login' %}" class="btn btn-primary btn-lg">Teacher Portal Login</a>
         {% endif %}
     </div>
 </section>
@@ -28,7 +35,7 @@
                 <h3>Parents' Portal</h3>
             </div>
             <p>
-                Access your child's official examination scores online. No account or password required. Simply enter your child's first name to view their complete score breakdown.
+                Access your child's official examination results slip online. No account required. Simply enter your child's first name to view, print, or download their complete score report as a PDF.
             </p>
         </div>
         <a href="{% url 'parent_search' %}" class="btn btn-gold" style="width: 100%;">
@@ -44,7 +51,7 @@
                 <h3>Teacher Portal</h3>
             </div>
             <p>
-                Teachers can log in securely using the shared staff access password to look up registered students and record or update scores for all nine curriculum subjects.
+                Authorized teachers can log in using the shared staff access password to look up registered students and record or update scores for all nine curriculum subjects.
             </p>
         </div>
         {% if user.is_authenticated %}
@@ -66,7 +73,7 @@
                 <h3>Administrator Area</h3>
             </div>
             <p>
-                Access the Django administrative dashboard to register students, configure subject offerings, manage examinations, and oversee score publications.
+                Access the administrative dashboard to register students, manage subjects, oversee examination results, and manage system users.
             </p>
         </div>
         <a href="/admin/" target="_blank" class="btn btn-secondary" style="width: 100%;">
@@ -77,35 +84,35 @@
 
 <div class="card" style="margin-top: 2rem;">
     <div class="card-header">
-        <h3 class="card-title">Curriculum Subjects in this Examination</h3>
-        <p class="card-subtitle">All students are assessed across nine core subjects</p>
+        <h3 class="card-title">Curriculum Examination Subjects</h3>
+        <p class="card-subtitle">Students are assessed across nine core academic subjects</p>
     </div>
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; margin-top: 0.5rem;">
-        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+        <div style="padding: 0.65rem 0.9rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 700; color: var(--navy-primary);">
             1. Mathematics
         </div>
-        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+        <div style="padding: 0.65rem 0.9rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 700; color: var(--navy-primary);">
             2. English Language
         </div>
-        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+        <div style="padding: 0.65rem 0.9rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 700; color: var(--navy-primary);">
             3. Integrated Science
         </div>
-        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+        <div style="padding: 0.65rem 0.9rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 700; color: var(--navy-primary);">
             4. Social Studies
         </div>
-        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+        <div style="padding: 0.65rem 0.9rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 700; color: var(--navy-primary);">
             5. Computing
         </div>
-        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+        <div style="padding: 0.65rem 0.9rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 700; color: var(--navy-primary);">
             6. RME
         </div>
-        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+        <div style="padding: 0.65rem 0.9rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 700; color: var(--navy-primary);">
             7. Ghanaian Language
         </div>
-        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+        <div style="padding: 0.65rem 0.9rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 700; color: var(--navy-primary);">
             8. Creative Arts
         </div>
-        <div style="padding: 0.6rem 0.85rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 600;">
+        <div style="padding: 0.65rem 0.9rem; background: var(--soft-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--navy-primary); font-weight: 700; color: var(--navy-primary);">
             9. Career Technology
         </div>
     </div>

@@ -1,35 +1,37 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Check Student Results - Parents' Results Portal{% endblock %}
+{% block title %}Check Student Results - God Reigns Dominion International School{% endblock %}
 
 {% block content %}
-<div style="max-width: 800px; margin: 1rem auto;">
+<div style="max-width: 820px; margin: 1rem auto;">
     <!-- Welcome Heading & Instructions -->
     <div class="card" style="text-align: center; border-top: 4px solid var(--gold-accent);">
-        <div class="portal-icon gold" style="margin: 0 auto 0.75rem auto; width: 52px; height: 52px; font-size: 1.6rem;">
-            &#127891;
-        </div>
-        <h2 style="color: var(--navy-dark); font-size: 1.85rem; font-weight: 800; margin-bottom: 0.5rem;">
-            Online Examination Results Checker
+        <img src="{% static 'images/logo.png' %}" alt="God Reigns Dominion International School Crest" style="width: 80px; height: 80px; object-fit: contain; margin: 0 auto 0.75rem auto; display: block; border-radius: 50%; border: 2px solid var(--gold-accent); padding: 2px; background: #ffffff;">
+        <span style="display: inline-block; font-size: 0.825rem; font-weight: 800; color: var(--gold-accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.25rem;">
+            God Reigns Dominion International School &bull; Est. 2001
+        </span>
+        <h2 style="color: var(--navy-primary); font-size: 1.85rem; font-weight: 900; margin-bottom: 0.5rem;">
+            Parents' Examination Results Portal
         </h2>
-        <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto 1.5rem auto;">
-            Welcome, parents and guardians. You can check your child's examination performance directly through this portal without needing an account.
+        <p style="color: var(--text-muted); font-size: 1rem; max-width: 620px; margin: 0 auto 1.5rem auto;">
+            Welcome, parents and guardians. Enter your child's first name below to view and download their official examination report slip.
         </p>
 
-        <div style="background-color: var(--soft-blue-bg); border: 1px solid var(--soft-blue-border); border-radius: var(--radius-sm); padding: 1rem; text-align: left; margin-bottom: 1.75rem;">
+        <div style="background-color: var(--soft-blue-bg); border: 1px solid var(--soft-blue-border); border-radius: var(--radius-sm); padding: 1.1rem 1.25rem; text-align: left; margin-bottom: 1.75rem;">
             <strong style="color: var(--navy-primary); font-size: 0.95rem; display: block; margin-bottom: 0.35rem;">
-                &#128161; How to Check Your Child's Results:
+                &#128161; How to Check &amp; Download Your Child's Results:
             </strong>
             <ol style="margin-left: 1.25rem; font-size: 0.9rem; color: var(--text-main); line-height: 1.6;">
-                <li>Enter your child's <strong>first name</strong> in the search box below (e.g., <em>Isaac</em>).</li>
+                <li>Enter your child's <strong>first name</strong> in the search box below (e.g., <em>Asana</em>, <em>Caleb</em>, <em>Bright</em>).</li>
                 <li>Click the <strong>"Check Results"</strong> button.</li>
-                <li>If multiple children share the same first name, select your child from the list using their full name and class.</li>
-                <li>View or print the official examination results slip.</li>
+                <li>If multiple children share the same name, select your child from the matching list using their full name and class.</li>
+                <li>View their score slip and click <strong>"Download Result Slip (PDF)"</strong> to save an official copy.</li>
             </ol>
         </div>
 
         <!-- Search Form -->
-        <form method="GET" action="{% url 'parent_search' %}" style="max-width: 500px; margin: 0 auto;">
+        <form method="GET" action="{% url 'parent_search' %}" style="max-width: 520px; margin: 0 auto;">
             <div class="form-group" style="text-align: left;">
                 <label for="first_name_input" class="form-label" style="font-weight: 700; color: var(--navy-dark);">
                     Child's First Name:
@@ -41,8 +43,8 @@
                         name="first_name" 
                         value="{{ first_name_query }}" 
                         class="form-control" 
-                        placeholder="Enter first name (e.g. Isaac)..." 
-                        style="flex: 1; min-width: 200px; font-size: 1.1rem; padding: 0.75rem;"
+                        placeholder="Enter child's first name..." 
+                        style="flex: 1; min-width: 220px; font-size: 1.1rem; padding: 0.75rem;"
                         required
                         autofocus
                     >
@@ -50,7 +52,7 @@
                         Check Results
                     </button>
                 </div>
-                <p class="form-help">Search is case-insensitive. Entering "isaac", "Isaac", or "ISAAC" works identically.</p>
+                <p class="form-help">Search is case-insensitive. Searching "Caleb", "caleb", or "CALEB" works identically.</p>
             </div>
         </form>
     </div>
@@ -64,7 +66,7 @@
                         Matching Students ({{ matched_students|length }})
                     </h3>
                     <p class="card-subtitle">
-                        Please find your child from the list below and click "View Examination Results"
+                        Please find your child from the list below and click "View Examination Results" to access or download their slip
                     </p>
                 </div>
 
@@ -72,33 +74,33 @@
                     {% for student in matched_students %}
                         <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; transition: border-color 0.15s ease;">
                             <div>
-                                <div style="font-size: 1.2rem; font-weight: 700; color: var(--navy-primary);">
+                                <div style="font-size: 1.25rem; font-weight: 800; color: var(--navy-primary);">
                                     {{ student.full_name }}
                                 </div>
-                                <div style="margin-top: 0.25rem; display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-muted);">
+                                <div style="margin-top: 0.25rem; display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-muted);">
                                     <span><strong>Admission No:</strong> {{ student.admission_number }}</span>
                                     <span><strong>Class:</strong> {{ student.class_name }}</span>
                                 </div>
                             </div>
                             <a href="{% url 'student_results' student.id %}" class="btn btn-primary">
-                                View Examination Results &rarr;
+                                View &amp; Download Results &rarr;
                             </a>
                         </div>
                     {% endfor %}
                 </div>
             {% else %}
-                <div style="text-align: center; padding: 2rem 1rem;">
-                    <div style="font-size: 2.5rem; color: var(--warning); margin-bottom: 0.5rem;">
+                <div style="text-align: center; padding: 2.5rem 1rem;">
+                    <div style="font-size: 2.75rem; color: var(--warning); margin-bottom: 0.5rem;">
                         &#128269;
                     </div>
-                    <h3 style="color: var(--navy-dark); margin-bottom: 0.5rem;">
+                    <h3 style="color: var(--navy-dark); margin-bottom: 0.5rem; font-size: 1.35rem;">
                         No Student Found
                     </h3>
-                    <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
-                        We could not find any registered student with the first name "<strong>{{ first_name_query }}</strong>".
+                    <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto; font-size: 1rem;">
+                        We could not find any registered student matching "<strong>{{ first_name_query }}</strong>".
                     </p>
                     <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.75rem;">
-                        Please check the spelling of the first name and search again. If you believe this is an error, please contact the school administrator.
+                        Please check the spelling of your child's name or contact the school administration for assistance.
                     </p>
                 </div>
             {% endif %}
